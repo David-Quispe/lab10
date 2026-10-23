@@ -24,7 +24,18 @@ class SerieEditorViewModel : ViewModel() {
     val state = mutableState.asStateFlow()
 
     fun change(form: SerieForm) {
-        if (!mutableState.value.saving) mutableState.value = mutableState.value.copy(form = form, fieldErrors = emptyMap(), error = null)
+        val current = mutableState.value
+        if (current.saving) return
+        val retainedErrors = current.fieldErrors.filterKeys { key ->
+            when (key) {
+                "name" -> form.name == current.form.name
+                "date" -> form.releaseDate == current.form.releaseDate
+                "rating" -> form.rating == current.form.rating
+                "category" -> form.category == current.form.category
+                else -> true
+            }
+        }
+        mutableState.value = current.copy(form = form, fieldErrors = retainedErrors, error = null)
     }
 
     fun load(id: Int) {
