@@ -46,7 +46,7 @@ fun ContenidoSerieEditar(id: Int, onSaved: () -> Unit, onCancel: () -> Unit, edi
     val enabled = state.loaded && !state.saving
     LaunchedEffect(id) { editor.load(id) }
     LaunchedEffect(state.saved) { if (state.saved) onSaved() }
-    LaunchedEffect(state.fieldErrors) {
+    LaunchedEffect(state.validationAttempt) {
         when {
             "name" in state.fieldErrors -> nameFocus.requestFocus()
             "date" in state.fieldErrors -> dateFocus.requestFocus()

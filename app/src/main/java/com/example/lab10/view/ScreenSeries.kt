@@ -21,7 +21,7 @@ fun ContenidoSeriesListado(state: SeriesUiState, onRefresh: () -> Unit, onEdit: 
     var query by rememberSaveable { mutableStateOf("") }
     var genre by rememberSaveable { mutableStateOf("") }
     val filtered = remember(state.series, query, genre) {
-        state.series.filter { (genre.isEmpty() || it.category == genre) && it.name.contains(query.trim(), ignoreCase = true) }
+        filterSeries(state.series, query, genre)
     }
     LazyColumn(
         modifier = Modifier.fillMaxSize(),

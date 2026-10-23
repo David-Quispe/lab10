@@ -27,7 +27,7 @@ fun ScreenInicio(state: SeriesUiState, onCollection: () -> Unit, onNew: () -> Un
         item {
             Column(Modifier.padding(horizontal = 24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text("Buenas historias.\nSiempre contigo.", style = MaterialTheme.typography.displaySmall)
-                Text("Tu espacio para guardar, descubrir y volver a tus series.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyLarge)
+                Text("Tu espacio para guardar y volver a tus series favoritas.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyLarge)
             }
         }
         if (state.loading) item { LinearProgressIndicator(Modifier.fillMaxWidth().padding(horizontal = 24.dp)) }
@@ -40,7 +40,7 @@ fun ScreenInicio(state: SeriesUiState, onCollection: () -> Unit, onNew: () -> Un
                         modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Ver ficha de ${featured.name}" },
                     ) { SerieArtwork(featured, Modifier.fillMaxWidth().height(224.dp), showTitle = true) }
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text("De tu colecciÃ³n", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
+                        Text("De tu colección", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
                         TextButton(onClick = onCollection) {
                             Text("Explorar todo")
                             Spacer(Modifier.width(6.dp))
@@ -52,16 +52,16 @@ fun ScreenInicio(state: SeriesUiState, onCollection: () -> Unit, onNew: () -> Un
         }
         if (state.series.isEmpty() && !state.loading && state.error == null) item {
             Column(Modifier.padding(horizontal = 24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("La primera historia la eliges tÃº.", style = MaterialTheme.typography.headlineSmall)
-                Text("AÃ±ade una serie para empezar tu colecciÃ³n.", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Button(onClick = onNew) { Icon(Icons.Default.Add, null); Spacer(Modifier.width(8.dp)); Text("AÃ±adir mi primera serie") }
+                Text("La primera historia la eliges tú.", style = MaterialTheme.typography.headlineSmall)
+                Text("Añade una serie para empezar tu colección.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Button(onClick = onNew) { Icon(Icons.Default.Add, null); Spacer(Modifier.width(8.dp)); Text("Añadir mi primera serie") }
             }
         }
         if (state.series.size > 1) {
             item {
                 Row(Modifier.fillMaxWidth().padding(horizontal = 24.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("MÃ¡s historias", style = MaterialTheme.typography.titleLarge)
-                    Text("${state.series.size} en tu colecciÃ³n", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelMedium)
+                    Text("Más historias", style = MaterialTheme.typography.titleLarge)
+                    Text("${state.series.size} en tu colección", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelMedium)
                 }
             }
             item {
@@ -80,7 +80,7 @@ fun ScreenInicio(state: SeriesUiState, onCollection: () -> Unit, onNew: () -> Un
         }
         item {
             OutlinedButton(onClick = onNew, modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).heightIn(min = 52.dp), shape = RoundedCornerShape(14.dp)) {
-                Icon(Icons.Default.Add, null, Modifier.size(20.dp)); Spacer(Modifier.width(8.dp)); Text("AÃ±adir una nueva historia")
+                Icon(Icons.Default.Add, null, Modifier.size(20.dp)); Spacer(Modifier.width(8.dp)); Text("Añadir una nueva historia")
             }
         }
     }

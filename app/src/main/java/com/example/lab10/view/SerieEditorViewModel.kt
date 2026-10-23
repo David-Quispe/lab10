@@ -17,6 +17,7 @@ data class EditorUiState(
     val fieldErrors: Map<String, String> = emptyMap(),
     val saved: Boolean = false,
     val loaded: Boolean = false,
+    val validationAttempt: Int = 0,
 )
 
 class SerieEditorViewModel : ViewModel() {
@@ -59,7 +60,10 @@ class SerieEditorViewModel : ViewModel() {
         val current = mutableState.value
         if (current.saving || !current.loaded) return
         val errors = current.form.errors()
-        if (errors.isNotEmpty()) { mutableState.value = current.copy(fieldErrors = errors); return }
+        if (errors.isNotEmpty()) {
+            mutableState.value = current.copy(fieldErrors = errors, validationAttempt = current.validationAttempt + 1)
+            return
+        }
         mutableState.value = current.copy(saving = true, error = null)
         viewModelScope.launch {
             try {
