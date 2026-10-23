@@ -132,8 +132,8 @@ fun ContenidoSerieEditar(id: Int, onSaved: () -> Unit, onCancel: () -> Unit, edi
         }
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         Row(Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OutlinedButton(onClick = onCancel, enabled = !state.saving, modifier = Modifier.weight(1f).heightIn(min = 52.dp), shape = RoundedCornerShape(14.dp)) { Text("Cancelar") }
-            Button(onClick = save, enabled = enabled, modifier = Modifier.weight(1.6f).heightIn(min = 52.dp), shape = RoundedCornerShape(14.dp)) {
+            OutlinedButton(onClick = onCancel, enabled = !state.saving, modifier = Modifier.weight(1f).heightIn(min = 52.dp), shape = RoundedCornerShape(14.dp), contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp)) { Text("Cancelar") }
+            Button(onClick = save, enabled = enabled, modifier = Modifier.weight(1.2f).heightIn(min = 52.dp), shape = RoundedCornerShape(14.dp), contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp)) {
                 if (state.saving) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(8.dp)) }
                 Text(if (state.saving) "Guardando…" else "Guardar serie")
             }

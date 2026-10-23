@@ -5,6 +5,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -12,6 +14,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.lab10.data.SerieModel
@@ -20,6 +25,13 @@ import com.example.lab10.data.SerieModel
 fun ContenidoSeriesListado(state: SeriesUiState, onRefresh: () -> Unit, onEdit: (Int) -> Unit, onDelete: (SerieModel) -> Unit, onCreate: () -> Unit) {
     var query by rememberSaveable { mutableStateOf("") }
     var genre by rememberSaveable { mutableStateOf("") }
+    val focus = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    val selectGenre: (String) -> Unit = {
+        genre = it
+        focus.clearFocus()
+        keyboard?.hide()
+    }
     val filtered = remember(state.series, query, genre) {
         filterSeries(state.series, query, genre)
     }
@@ -46,13 +58,15 @@ fun ContenidoSeriesListado(state: SeriesUiState, onRefresh: () -> Unit, onEdit: 
                 leadingIcon = { Icon(Icons.Default.Search, null) },
                 trailingIcon = { if (query.isNotEmpty()) IconButton(onClick = { query = "" }) { Icon(Icons.Default.Close, "Borrar búsqueda") } },
                 shape = RoundedCornerShape(16.dp),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { focus.clearFocus(); keyboard?.hide() }),
             )
         }
         item {
             LazyRow(contentPadding = PaddingValues(horizontal = 24.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                item { FilterChip(selected = genre.isEmpty(), onClick = { genre = "" }, label = { Text("Todas") }, modifier = Modifier.heightIn(min = 48.dp)) }
+                item { FilterChip(selected = genre.isEmpty(), onClick = { selectGenre("") }, label = { Text("Todas") }, modifier = Modifier.heightIn(min = 48.dp)) }
                 items(categories.entries.toList(), key = { it.key }) { (key, label) ->
-                    FilterChip(selected = genre == key, onClick = { genre = key }, label = { Text(label) }, modifier = Modifier.heightIn(min = 48.dp))
+                    FilterChip(selected = genre == key, onClick = { selectGenre(key) }, label = { Text(label) }, modifier = Modifier.heightIn(min = 48.dp))
                 }
             }
         }
