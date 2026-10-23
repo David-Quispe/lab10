@@ -16,6 +16,8 @@ data class SeriesUiState(
     val loading: Boolean = false,
     val error: String? = null,
     val notice: String? = null,
+    val pendingDelete: SerieModel? = null,
+    val deleting: Boolean = false,
 )
 
 fun apiError(error: Exception): String = when (error) {
@@ -27,6 +29,34 @@ fun apiError(error: Exception): String = when (error) {
 class SeriesViewModel : ViewModel() {
     private val mutableState = MutableStateFlow(SeriesUiState())
     val state = mutableState.asStateFlow()
+
+    fun requestDelete(serie: SerieModel) {
+        mutableState.value = mutableState.value.copy(pendingDelete = serie, error = null, notice = null)
+    }
+
+    fun cancelDelete() {
+        if (!mutableState.value.deleting) mutableState.value = mutableState.value.copy(pendingDelete = null)
+    }
+
+    fun delete() {
+        val serie = mutableState.value.pendingDelete ?: return
+        val id = serie.id ?: return
+        if (mutableState.value.deleting) return
+        mutableState.value = mutableState.value.copy(deleting = true, error = null)
+        viewModelScope.launch {
+            try {
+                val response = SerieApiClient.service.deleteSerie(id)
+                if (!response.isSuccessful) throw HttpException(response)
+                mutableState.value = mutableState.value.copy(
+                    series = mutableState.value.series.filterNot { it.id == id },
+                    pendingDelete = null, deleting = false, notice = "Serie eliminada correctamente.",
+                )
+            } catch (e: CancellationException) { throw e
+            } catch (e: Exception) {
+                mutableState.value = mutableState.value.copy(deleting = false, error = apiError(e))
+            }
+        }
+    }
 
     fun refresh(notice: String? = null) {
         if (mutableState.value.loading) return
